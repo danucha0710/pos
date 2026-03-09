@@ -1,13 +1,9 @@
 <?php
-mysqli_close($condb);
+// ปิด div wrapper หลักของ AdminLTE
 ?>
-
 </div>
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Modify by</b> Aj.Dong
-    </div>
-    <strong>Copyright &copy; 2023 BPCC POS System</strong> All rights reserved.
+  <footer class="main-footer text-center">
+    BPCC POS System &copy; <?php echo date('Y'); ?> Designed by Aj.Dong (091-8390785)
   </footer>
 
   <!-- Control Sidebar -->

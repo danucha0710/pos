@@ -113,7 +113,7 @@ mysqli_close($condb);
     </div> 
 
 <?php
-  include('footer2.php'); 
+  include('footer.php'); 
 ?>
 </body>
 </html>

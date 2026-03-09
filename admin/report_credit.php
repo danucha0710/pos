@@ -161,7 +161,7 @@ $result = mysqli_query($condb, $query);
 
 <?php 
   mysqli_close($condb);
-  include('footer2.php'); 
+  include('footer.php'); 
 ?>
 
 </body>

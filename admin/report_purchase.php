@@ -270,7 +270,7 @@ for($row1 = 0; $row1 < $row_count; $row1++) {
 
 <?php 
   mysqli_close($condb);
-  include('footer2.php'); 
+  include('footer.php'); 
 ?>
 
 </body>

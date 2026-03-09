@@ -231,7 +231,7 @@ for($row1 = 0; $row1 < $rs_my_order3_count; $row1++) {
 
 <?php 
   mysqli_close($condb);
-  include('footer2.php'); 
+  include('footer.php'); 
 ?>
 
 <script>

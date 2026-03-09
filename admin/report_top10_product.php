@@ -158,7 +158,7 @@ $result = mysqli_query($condb, $query_my_order);
 
 <?php 
   mysqli_close($condb);
-  include('footer2.php'); 
+  include('footer.php'); 
 ?>
 
 <script>
