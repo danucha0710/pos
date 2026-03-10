@@ -144,7 +144,22 @@ for($row1 = 0; $row1 < $row_count; $row1++) {
         <div class="card-header ">
           <h3 class="card-title">รายการยอดซื้อรายบุคคล</h3>
           <div align="right">
-            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-search"></i> ค้นหา ตามช่วงเวลา</button>
+            <button 
+              type="button" 
+              class="btn btn-light" 
+              style="margin-right:6px;" 
+              onclick="window.print();"
+            >
+              <i class="fa fa-print"></i> พิมพ์
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-light" 
+              data-bs-toggle="modal" 
+              data-bs-target="#exampleModal"
+            >
+              <i class="fa fa-search"></i> ค้นหา ตามช่วงเวลา
+            </button>
           </div>
         </div>
         <div class="card-body">

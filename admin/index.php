@@ -49,15 +49,56 @@
             </div>
             <div class="modal-body">
               <div class="row">
+                <h6>ค้นหาแบบช่วงวัน</h6>
+              </div>  
+              <div class="row mt-3">
                 <div class="col-md-6">
                   <label for="date_s">วันที่เริ่มต้น</label>
-                  <input type="date" class="form-control" id="date_s" name="date_s" required>
+                  <input type="date" class="form-control" id="date_s" name="date_s">
                 </div>
                 <div class="col-md-6">
                   <label for="date_e">วันที่สิ้นสุด</label>
-                  <input type="date" class="form-control" id="date_e" name="date_e" required>
+                  <input type="date" class="form-control" id="date_e" name="date_e">
                 </div>
-              </div>      
+              </div> 
+              <div class="row mt-3">
+                <h6>ค้นหาแบบเลือกเดือน</h6>
+              </div>  
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <select class="form-control" name="month" id="month">
+                    <option value="">--เลือกเดือน--</option>
+                    <option value="01">มกราคม</option>
+                    <option value="02">กุมภาพันธ์</option>
+                    <option value="03">มีนาคม</option>
+                    <option value="04">เมษายน</option>
+                    <option value="05">พฤษภาคม</option>
+                    <option value="06">มิถุนายน</option>
+                    <option value="07">กรกฎาคม</option>
+                    <option value="08">สิงหาคม</option>
+                    <option value="09">กันยายน</option>
+                    <option value="10">ตุลาคม</option>
+                    <option value="11">พฤศจิกายน</option>
+                    <option value="12">ธันวาคม</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <h6>ค้นหาแบบเลือกปี</h6>
+              </div>  
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <?php $now_year = date('Y'); ?>
+                  <select class="form-control" name="year" id="year">
+                    <option value="">--เลือกปี--</option>
+                    <option value="<?php echo $now_year; ?>"><?php echo $now_year; ?></option>
+                    <option value="<?php echo $now_year-1; ?>"><?php echo $now_year-1; ?></option>
+                    <option value="<?php echo $now_year-2; ?>"><?php echo $now_year-2; ?></option>
+                    <option value="<?php echo $now_year-3; ?>"><?php echo $now_year-3; ?></option>
+                    <option value="<?php echo $now_year-4; ?>"><?php echo $now_year-4; ?></option>
+                  </select>
+                </div>
+              </div>            
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
