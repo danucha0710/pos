@@ -257,12 +257,7 @@ $rs_t= mysqli_query($condb, $query_t);
           <!-- Add icons to the links using the .nav-icon class
             with font-awesome or any other icon font library -->
           <li class="nav-header">ตั้งค่าข้อมูลระบบ</li>
-          <li class="nav-item">
-            <a href="list_mem.php" class="nav-link <?php if($menu=="member"){echo "active";} ?> ">
-              <i class="nav-icon fa fa-users"></i>
-              <p>สมาชิก</p>
-            </a>
-          </li>
+
         </ul>
         <hr>
 
