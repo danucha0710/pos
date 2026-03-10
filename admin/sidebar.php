@@ -61,6 +61,12 @@ $rs_t= mysqli_query($condb, $query_t);
             with font-awesome or any other icon font library -->
           <li class="nav-header">ตั้งค่าข้อมูลระบบ</li>
           <li class="nav-item">
+            <a href="settings.php" class="nav-link <?php if($menu=="settings"){echo "active";} ?> ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>ตั้งค่าระบบ</p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="list_mem.php" class="nav-link <?php if($menu=="member"){echo "active";} ?> ">
               <i class="nav-icon fa fa-users"></i>
               <p>สมาชิก</p>

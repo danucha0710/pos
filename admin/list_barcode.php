@@ -82,12 +82,17 @@
     .barcode-wrapper {
       background: #ffffff;
       border-radius: 0.5rem;
-      padding: 0.35rem 0.5rem;
+      padding: 0.25rem 0.35rem;
       border: 1px dashed #dee2e6;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+
+    .barcode-inner {
+      width: 100%;
+      text-align: center;
     }
 
     .stock-badge {
@@ -211,10 +216,11 @@ include "../barcode/src/BarcodeGeneratorHTML.php";
 function barcode($code){
   // ใช้ HTML generator และจัดให้อยู่กึ่งกลาง รองรับทั้งแสดงผลและพิมพ์
   $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
-  $border = 1.2; // ความหนาเส้นบาร์โค้ด
-  $height = 30;  // ความสูงบาร์โค้ด
+  // เพิ่มความหนาและความสูงของบาร์โค้ดให้ใหญ่และอ่านง่าย
+  $border = 2.0; // ความหนาเส้นบาร์โค้ด (scale)
+  $height = 50;  // ความสูงบาร์โค้ด (px)
   $html = $generator->getBarcode($code , $generator::TYPE_CODE_128,$border,$height);
-  return '<div style="display:inline-block;">'.$html.'</div>';
+  return '<div class="barcode-inner">'.$html.'</div>';
 }
 ?>
 

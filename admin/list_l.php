@@ -2,8 +2,18 @@
 $menu = "sale";
 include("header.php");
 
-// รับค่าคำค้นหาจากช่อง Scan / รหัสสินค้า
-$keyword = !empty($_GET['p_barCode']) ? mysqli_real_escape_string($condb, $_GET['p_barCode']) : '';
+// รับค่าพารามิเตอร์
+$rawBarcode = !empty($_GET['p_barCode']) ? mysqli_real_escape_string($condb, $_GET['p_barCode']) : '';
+$act        = !empty($_GET['act']) ? $_GET['act'] : '';
+
+// กำหนด keyword สำหรับค้นหา:
+// - กรณี act=add หรือ act=remove ให้ "ไม่ใช้" p_barCode มากรองรายการสินค้า (ให้แสดงสินค้าทั้งหมด)
+// - กรณีปกติ (ไม่มี act หรือ act อื่น) ใช้ p_barCode เป็นคำค้นหาได้ตามเดิม
+if ($act === 'add' || $act === 'remove') {
+  $keyword = '';
+} else {
+  $keyword = $rawBarcode;
+}
 
 // สร้างเงื่อนไข WHERE สำหรับค้นหา
 $whereClause = "WHERE 1";

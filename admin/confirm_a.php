@@ -10,6 +10,17 @@ $mem_id=$_SESSION['mem_id'];
 //print_r($_POST);
 //echo "</pre>";
 // exit();
+
+// ดึงหมายเลขพร้อมเพย์จากตารางตั้งค่า
+$promptpay_no = '';
+$promptpay_qr_url = '';
+
+$sql_settings = "SELECT promptpay_no FROM tbl_settings LIMIT 1";
+$result_settings = mysqli_query($condb, $sql_settings);
+if ($result_settings && mysqli_num_rows($result_settings) > 0) {
+  $row_settings = mysqli_fetch_assoc($result_settings);
+  $promptpay_no = $row_settings['promptpay_no'];
+}
 ?>
 
     <!-- Content Header (Page header) -->
@@ -67,6 +78,11 @@ $mem_id=$_SESSION['mem_id'];
                         echo 		"<td colspan='4' align='right'><b>ราคารวม</b></td>";
   	                    echo 		"<td colspan='2' align='left'" . "<b>" . number_format($total, 2) . "</b></td>";
                         echo "</tr>";
+                        // สร้าง URL สำหรับ QR พร้อมเพย์ (ใช้ยอดรวมทั้งหมด)
+                        if (!empty($promptpay_no)) {
+                          $pay_amount_raw = number_format($total, 2, '.', '');
+                          $promptpay_qr_url = "https://promptpay.io/".urlencode($promptpay_no)."/".$pay_amount_raw.".png";
+                        }
                       }
                       ?>
                     </table>
@@ -106,10 +122,30 @@ $mem_id=$_SESSION['mem_id'];
                           <input type="number" id="pay_amount" name="pay_amount" class="form-control" value="<?php echo number_format($total, 2 ,'.', ''); ?>" readonly>
                         </div>
                       </div>
-                      <div class="row mt-3">
+                      <div class="row mt-3" id="pay_row2">
                         <label class="col-sm-3 col-form-label">ยอดเงินที่รับชำระ</label>
                         <div class="col-sm-5">
                           <input type="number" step="0.01" min="0" id="pay_amount2" name="pay_amount2" class="form-control" required>
+                        </div>
+                      </div>
+                      <div class="row mt-3" id="qr_row" style="display: none;">
+                        <div class="col-sm-9 offset-sm-1 text-center">
+                          <?php if (!empty($promptpay_qr_url)) { ?>
+                            <img 
+                              id="promptpay_qr" 
+                              src="<?php echo $promptpay_qr_url; ?>" 
+                              alt="PromptPay QR"
+                              class="img-fluid border rounded"
+                              style="max-width: 220px;"
+                            >
+                            <small class="form-text text-muted d-block mt-2">
+                              สแกน QR Code เพื่อชำระเงินผ่านพร้อมเพย์
+                            </small>
+                          <?php } else { ?>
+                            <div class="alert alert-warning mb-0">
+                              ยังไม่ได้ตั้งค่าหมายเลขพร้อมเพย์ในหน้า Setting
+                            </div>
+                          <?php } ?>
                         </div>
                       </div>
                       <div class="row mt-3">
@@ -145,14 +181,16 @@ $mem_id=$_SESSION['mem_id'];
   const selectNameLabel = document.getElementById('select_name_label');
   const selectName = document.getElementById('select_name');
   const memPhoneInput = document.querySelector('input[name="mem_phone"]');
+  const payAmountInput = document.getElementById('pay_amount');
   const payAmount2Input = document.getElementById('pay_amount2');
+  const payRow2 = document.getElementById('pay_row2');
+  const qrRow = document.getElementById('qr_row');
   let selectNameWrapper = null;
 
   function show(value) {
     // ล้างค่าก่อนทุกครั้งที่เปลี่ยนรูปแบบการชำระเงิน
     if (selectName) selectName.value = '';
     if (memPhoneInput) memPhoneInput.value = '';
-    if (payAmount2Input) payAmount2Input.value = '';
 
     if (value == 3) {
       // กรณีสินเชื่อ: ใช้เลือกจากรายชื่อสมาชิก
@@ -176,10 +214,17 @@ $mem_id=$_SESSION['mem_id'];
         }
       }
 
-      // ไม่ต้องกรอกเบอร์โทรเอง
+      // ไม่ต้องกรอกเบอร์โทรเอง และยอดรับชำระ = ยอดที่ต้องชำระ
       if (memPhoneInput) memPhoneInput.readOnly = true;
-    } else {
-      // กรณีอื่น ๆ: ซ่อนรายชื่อสมาชิก และให้กรอกเบอร์โทรได้ตามปกติ
+      if (payAmountInput && payAmount2Input) {
+        const payAmount = parseFloat(payAmountInput.value) || 0;
+        payAmount2Input.value = payAmount.toFixed(2);
+        payAmount2Input.required = false;
+      }
+      if (payRow2) payRow2.style.display = "none";
+      if (qrRow) qrRow.style.display = "none";
+    } else if (value == 2) {
+      // โอนเงินผ่านบัญชีธนาคาร: แสดง QR พร้อมเพย์, ไม่ใช้รายชื่อสมาชิก
       if (selectNameLabel) selectNameLabel.style.display = "none";
       if (!selectNameWrapper && selectName) {
         selectNameWrapper = selectName.closest('.dselect-wrapper') || selectName.parentElement;
@@ -190,6 +235,33 @@ $mem_id=$_SESSION['mem_id'];
         selectName.style.display = "none";
       }
       if (memPhoneInput) memPhoneInput.readOnly = false;
+      // ยอดรับชำระ = ยอดที่ต้องชำระ และซ่อนช่องกรอก
+      if (payAmountInput && payAmount2Input) {
+        const payAmount = parseFloat(payAmountInput.value) || 0;
+        payAmount2Input.value = payAmount.toFixed(2);
+        payAmount2Input.required = false;
+      }
+      if (payRow2) payRow2.style.display = "none";
+      if (qrRow) qrRow.style.display = "block";
+    } else {
+      // กรณีอื่น ๆ: ซ่อนรายชื่อสมาชิก และ QR ให้กรอกเบอร์โทรได้ตามปกติ
+      if (selectNameLabel) selectNameLabel.style.display = "none";
+      if (!selectNameWrapper && selectName) {
+        selectNameWrapper = selectName.closest('.dselect-wrapper') || selectName.parentElement;
+      }
+      if (selectNameWrapper) {
+        selectNameWrapper.style.display = "none";
+      } else if (selectName) {
+        selectName.style.display = "none";
+      }
+      if (memPhoneInput) memPhoneInput.readOnly = false;
+      // เงินสด: แสดงช่องยอดที่รับชำระให้กรอกเอง
+      if (payAmount2Input) {
+        payAmount2Input.value = '';
+        payAmount2Input.required = true;
+      }
+      if (payRow2) payRow2.style.display = "flex";
+      if (qrRow) qrRow.style.display = "none";
     }
   }
 </script>
